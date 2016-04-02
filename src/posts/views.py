@@ -1,6 +1,7 @@
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, render
 
+from .forms import PostForm
 from .models import Post
 
 def post_list(request):
@@ -12,7 +13,17 @@ def post_list(request):
     return render(request, 'index.html', context)
 
 def post_create(request):
-    return HttpResponse("<h1>Create</h1>")
+    form = PostForm(request.POST or None)
+    if form.is_valid():
+        instance = form.save(commit = False)
+        instance.save()
+
+    context = {
+        "form": form,
+    }
+
+    return render(request, 'post_form.html', context)
+    # return render(request, 'index.html', context)
 
 def post_detail(request, id):
     instance = get_object_or_404(Post, id = id)
