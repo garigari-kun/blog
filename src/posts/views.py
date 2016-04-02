@@ -1,11 +1,15 @@
 from django.http import HttpResponse
 from django.shortcuts import render
 
+from .models import Post
+
 def post_list(request):
+    queryset = Post.objects.all()
     context = {
         "title": "List",
+        "object_list": queryset,
     }
-    
+
     return render(request, 'index.html', context)
 
 def post_create(request):
