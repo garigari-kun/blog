@@ -1,6 +1,6 @@
 from django.contrib import messages
 from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404, render, redirect
 
 from .forms import PostForm
 from .models import Post
@@ -55,5 +55,8 @@ def post_update(request, id = None):
 
     return render(request, "post_form.html", context)
 
-def post_delete(request):
-    return HttpResponse("<h1>Delete</h1>")
+def post_delete(request, id = None):
+    instance = get_object_or_404(Post, id = id)
+    instance.delete()
+    messages.success(request, 'Successfully deleted')
+    return redirect("posts:list")
