@@ -2,6 +2,7 @@ from urllib.parse import quote_plus
 
 from django.contrib import messages
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.db.models import Q
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.shortcuts import get_object_or_404, render, redirect
 from django.utils import timezone
@@ -16,7 +17,18 @@ def post_list(request):
     if request.user.is_staff or request.user.is_superuser:
         queryset_list = Post.objects.all()
 
-    paginator = Paginator(queryset_list, 10)
+    # search functionality
+    query = request.GET.get("q")
+    if query:
+        queryset_list = queryset_list.filter(
+            Q(title__icontains = query)|
+            Q(content__icontains = query)|
+            Q(user__first_name__icontains = query)|
+            Q(user__last_name__icontains = query)
+        ).distinct()
+
+
+    paginator = Paginator(queryset_list, 2)
     page_request_var = "page"
     page = request.GET.get(page_request_var)
     try:
