@@ -10,6 +10,8 @@
                 {{ title }}
                 <small>{{ instance.timestamp }}</small>
             </h1>
+            <a href = "https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}">Facebook</a>
+            <a href = "https://twitter.com/home?status={{ share_string }}%20{{ request.build_absolute_uri }}">Twitter</a>
             {{ instance.content|linebreaks }}<br />
         </div>
     </div>
